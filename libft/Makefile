@@ -1,4 +1,4 @@
-NAME = libftprintf.a
+NAME = libft.a
 
 FLAGS = -Wall -Werror -Wextra -I. -c
 
@@ -15,7 +15,7 @@ SRC = 	ft_strncpy.c ft_strcpy.c ft_strdup.c ft_strcat.c ft_strncat.c ft_strcmp.c
 		ft_lstiter.c ft_lstmap.c cast_int.c convert.c convert_wc.c format_hex.c \
 		format_int.c format_oct.c format_uint.c ft_printf.c handle_percent.c \
 		libft_digits.c libft_nbrprint.c libft_print.c libft_wprint.c print_helpers.c \
-		print_str.c setup.c 
+		print_str.c setup.c get_next_line.c
 
 OBJ = $(SRC:%.c=%.o)
 
