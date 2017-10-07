@@ -18,7 +18,7 @@
 # include <fcntl.h>
 # include "libft.h"
 
-# define BUFF_SIZE 10000000000
+# define BUFF_SIZE 10
 
 typedef struct	s_gnl
 {
