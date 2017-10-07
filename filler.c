@@ -10,12 +10,12 @@ t_player *init_player(char *line)
 	t_player *player;
 	char *p;
 
+
 	player = (t_player*)malloc(sizeof(t_player));
 	p = ft_strstr(line, " p");
 	player->player = *(p + 2) - 48;
 	player->player_char = ' ';
-	int fd = open("test.txt", O_CREAT | O_RDWR);
-	dprintf(fd, "line: %s", line);
+	
 	return(player);
 }
 
@@ -31,10 +31,20 @@ int next_line()
 	{
 		//ft_printf("while:\n");
 		ret = get_next_line(0, &line);
+		int fd = open("testret.txt", O_CREAT | O_RDWR);
+		dprintf(fd, "line: %s", line);
+		// if (line)
+		// {
+		// int fd = open("testret1.txt", O_RDWR);
+		// dprintf(fd, "line: %s\n", line);
+		// 	return 0;
+		// }
 		if (ft_strstr(line, "exec"))
 		{
+			int fd = open("test3.txt", O_RDWR);
+			dprintf(fd, "line: %s", line);
 			player = init_player(line);
-			//print_player(player);
+			print_player(player);
 		}
 		// else if (ft_strstr(line, "Plateau "))
 		// {}

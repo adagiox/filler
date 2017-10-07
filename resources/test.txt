@@ -1,2 +1,0 @@
-line: $$$ exec p1 : [../a.out]a.line: out]
-Plate
