@@ -1,4 +1,9 @@
-line1: $$$ exec p2 : [../a.out]line2: $$$ exec p2 : [../a.out]line1: $$$ exec p2 : [../a.out]
-line2: $$$ exec p2 : [../a.out]
 line1: $$$ exec p2 : [../a.out]
 line2: $$$ exec p2 : [../a.out]
+player_init: 0,  
+line1: $$$ exec p2 : [../a.out]
+line2: $$$ exec p2 : [../a.out]
+player_init: 0,  
+line1: $$$ exec p2 : [../a.out]
+line2: $$$ exec p2 : [../a.out]
+player_init: 1,  

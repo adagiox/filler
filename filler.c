@@ -1,8 +1,8 @@
 #include "filler.h"
 
-void print_player(t_player *player)
+void print_player(int fd1, t_player *player)
 {
-	
+	dprintf(fd1, "player_init: %u, %c\n", player->player, player->player_char);
 }
 
 t_player *init_player(char *line)
@@ -13,7 +13,7 @@ t_player *init_player(char *line)
 
 	player = (t_player*)malloc(sizeof(t_player));
 	p = ft_strstr(line, " p");
-	player->player = *(p + 2) - 48;
+	player->player = *(p + 2) - 49;
 	player->player_char = ' ';
 	
 	return(player);
@@ -44,7 +44,7 @@ int next_line()
 		{
 			dprintf(fd1, "line2: %s\n", line);
 			player = init_player(line);
-			//print_player(player);
+			print_player(fd1, player);
 		}
 		// else if (ft_strstr(line, "Plateau "))
 		// {}

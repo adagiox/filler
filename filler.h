@@ -9,6 +9,6 @@ typedef struct	s_player
 
 }				t_player;
 
-void print_player(t_player *player);
+void print_player(int fd1, t_player *player);
 t_player *init_player(char *line);
 int next_line();
