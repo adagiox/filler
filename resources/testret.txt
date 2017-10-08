@@ -7,3 +7,15 @@ player_init: 0,
 line1: $$$ exec p2 : [../a.out]
 line2: $$$ exec p2 : [../a.out]
 player_init: 1,  
+line1: $$$ exec p2 : [../a.out]
+line2: $$$ exec p2 : [../a.out]
+player_init: 1,  
+line1: $$$ exec p1 : [../a.out]
+line2: $$$ exec p1 : [../a.out]
+player_init: 0,  
+line1: $$$ exec p1 : [../a.out]
+line2: $$$ exec p1 : [../a.out]
+player_init: 1,  
+line1: $$$ exec p2 : [../a.out]
+line2: $$$ exec p2 : [../a.out]
+player_init: 2,  
