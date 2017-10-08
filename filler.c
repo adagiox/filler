@@ -3,6 +3,7 @@
 void print_player(int fd1, t_player *player)
 {
 	dprintf(fd1, "player_init: %u, %c\n", player->player, player->player_char);
+	dprintf(fd1, "\n");
 }
 
 void print_filler(int fd1, t_filler *filler)
@@ -12,10 +13,33 @@ void print_filler(int fd1, t_filler *filler)
 	dprintf(fd1, "\n");
 }
 
+void print_map(int fd1, t_filler *filler)
+{
+	for (int i = 0; i < filler->height; i++)
+		dprintf(fd1, "%s\n", filler->map[i]);
+	dprintf(fd1, "\n");
+}
+
 void print_piece(int fd1, t_piece *piece)
 {
 	for(int i = 0; i < piece->height; i++)
 		dprintf(fd1, "piece: %s\n", piece->piece[i]);
+	dprintf(fd1, "\n");
+}
+
+char **init_map(t_filler *filler)
+{
+	char **map;
+
+	map = (char **)malloc(sizeof(char *) * filler->height);
+	for (int i = 0; i < filler->height; i++)
+	{
+		map[i] = ft_strnew(filler->width + 1);
+		for (int j = 0; j < filler->width; j++)
+			map[i][j] = '0';
+		map[i][filler->width] = '\0';
+	}
+	return (map);
 }
 
 t_filler *init_filler(char *line)
@@ -37,6 +61,7 @@ t_filler *init_filler(char *line)
 		h[i][filler->width] = '\0';
 	}
 	filler->board = h;
+	filler->map = init_map(filler);
 	return(filler);
 }
 
@@ -49,9 +74,15 @@ t_player *init_player(char *line)
 	p = ft_strstr(line, " p");
 	player->player = *(p + 2) - 48;
 	if (player->player == 1)
+	{
 		player->player_char = 'O';
+		player->opp_char = 'X';
+	}
 	else
+	{
 		player->player_char = 'X';
+		player->opp_char = 'O';
+	}
 	return(player);
 }
 
@@ -72,6 +103,25 @@ int update_board(t_filler *filler, t_player *player, char **line)
 		}
 	}
 	return (ret);
+}
+
+int update_map(t_filler *filler, t_player *player)
+{
+	for (int i = 0; i < filler->height; i++)
+	{
+		for (int j = 0; j < filler->width; j++)
+		{
+			if (filler->board[i][j] == '.')
+				filler->map[i][j] = '0';
+			else if (filler->board[i][j] == player->player_char ||
+				filler->board[i][j] == player->player_char - 32)
+				filler->map[i][j] = '2';
+			else if (filler->board[i][j] == player->opp_char ||
+				filler->board[i][j] == player->opp_char - 32)
+				filler->map[i][j] = '1';
+		}
+	}
+	return (1);
 }
 
 // t_piece *reduce_piece(t_piece *piece)
@@ -119,16 +169,18 @@ int next_line()
 	t_filler *filler;
 
 	ret = 1;
+	int fd1 = open("testing.txt", O_CREAT | O_APPEND | O_RDWR);
 	while (ret > 0)
 	{
 		ret = get_next_line(0, &line);
-		int fd1 = open("testing.txt", O_CREAT | O_APPEND | O_RDWR);
 		if (ft_strstr(line, "Plateau ") && ret > 0)
 			ret = get_next_line(0, &line);
 		else if (ft_strstr(line, "  012") && ret > 0)
 		{
 			update_board(filler, player, &line);
+			update_map(filler, player);
 			print_filler(fd1, filler);
+			print_map(fd1, filler);
 		}
 		else if (ft_strstr(line, "Piece ") && ret > 0)
 		{
@@ -146,12 +198,13 @@ int next_line()
 			filler = init_filler(line);
 			print_player(fd1, player);
 			print_filler(fd1, filler);
+			print_map(fd1, filler);
 		}
 		else 
 			ret = -1;
 		// make sure -1 is returned 
-		close(fd1);
 	}
+	close(fd1);
 	return (ret);
 }
 
