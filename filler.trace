@@ -1,6 +1,6 @@
-seed = 8185
+seed = 5125
 O: error on input
 ./a.out: Segfault at 0
 ./abanlin.filler won
 Score:
-0AGAINST156
+0AGAINST154

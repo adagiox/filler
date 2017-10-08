@@ -79,7 +79,7 @@ int update_board(t_filler *filler, t_player *player, char **line)
 
 // }
 
-int init_piece(t_player *player, t_filler *filler, char **line)
+int init_piece(int fd1, t_player *player, t_filler *filler, char **line)
 {
 	t_piece *piece;
 	char **p;
@@ -87,9 +87,11 @@ int init_piece(t_player *player, t_filler *filler, char **line)
 	piece = (t_piece *)malloc(sizeof(piece));
 	piece->w_offset = 0;
 	piece->h_offset = 0;
-	*line += 6;
+	*line = *line + 6;
 	piece->height = ft_atoi(*line);
 	piece->width = ft_atoi(*line + ft_countdigits(piece->height) + 1);
+	dprintf(fd1, "height: %i, width: %i\n", piece->height, piece->width);
+	close(fd1);
 	p = (char **)malloc(sizeof(char *) * piece->height);
 	for (int i = 0; i < piece->height; i++)
 	{
@@ -130,7 +132,7 @@ int next_line()
 		else if (ft_strstr(line, "Piece ") && ret > 0)
 		{
 			dprintf(fd1, "line: %s\n", line);
-			init_piece(player, filler, &line);
+			init_piece(fd1, player, filler, &line);
 			dprintf(fd1, "line: %s\n", line);
 			//place_piece(player, filler, piece);
 			print_piece(fd1, player->piece);
