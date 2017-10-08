@@ -32,5 +32,14 @@ player_init: 1, O
 .................
 .................
 
-line: Piece 2 1:
-height: 2, width: 1
+line: Piece 2 3:
+height: 2, width: 3
+line1: .**
+p1: .**
+line2: ..*
+p2: ..*
+line: ..*
+.**
+..*
+
+

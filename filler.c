@@ -16,6 +16,8 @@ void print_piece(int fd1, t_piece *piece)
 {
 	for(int i = 0; i < piece->height; i++)
 		dprintf(fd1, "%s\n", piece->piece[i]);
+	dprintf(fd1, "\n");
+	dprintf(fd1, "\n");
 }
 
 t_filler *init_filler(char *line)
@@ -91,16 +93,18 @@ int init_piece(int fd1, t_player *player, t_filler *filler, char **line)
 	piece->height = ft_atoi(*line);
 	piece->width = ft_atoi(*line + ft_countdigits(piece->height) + 1);
 	dprintf(fd1, "height: %i, width: %i\n", piece->height, piece->width);
-	close(fd1);
 	p = (char **)malloc(sizeof(char *) * piece->height);
 	for (int i = 0; i < piece->height; i++)
 	{
 		get_next_line(0, line);
+		dprintf(fd1, "line%i: %s\n", i + 1, *line);
 		p[i] = ft_strnew(piece->width + 1);
 		for (int j = 0; j < piece->width; j++)
-			p[i][j] = *line[j];
+			p[i][j] = (*line)[j];
 		p[i][piece->width] = '\0';
+		dprintf(fd1, "p%i: %s\n", i + 1, p[i]);
 	}
+	piece->piece = p;
 	player->piece = piece;
 	return (1);
 }
