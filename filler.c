@@ -31,25 +31,26 @@ int next_line()
 	{
 		//ft_printf("while:\n");
 		ret = get_next_line(0, &line);
-		int fd = open("testret.txt", O_CREAT | O_RDWR);
-		dprintf(fd, "line: %s", line);
+		int fd1 = open("testret.txt", O_CREAT | O_APPEND | O_RDWR);
+		dprintf(fd1, "line1: %s\n", line);
 		// if (line)
 		// {
 		// int fd = open("testret1.txt", O_RDWR);
 		// dprintf(fd, "line: %s\n", line);
 		// 	return 0;
 		// }
+		
 		if (ft_strstr(line, "exec"))
 		{
-			int fd = open("test3.txt", O_RDWR);
-			dprintf(fd, "line: %s", line);
+			dprintf(fd1, "line2: %s\n", line);
 			player = init_player(line);
-			print_player(player);
+			//print_player(player);
 		}
 		// else if (ft_strstr(line, "Plateau "))
 		// {}
 		// else if (ft_strstr(line, ""))
 		
+		close(fd1);
 		ret = 0;
 	}
 	return (ret);

@@ -1,0 +1,4 @@
+line1: $$$ exec p2 : [../a.out]line2: $$$ exec p2 : [../a.out]line1: $$$ exec p2 : [../a.out]
+line2: $$$ exec p2 : [../a.out]
+line1: $$$ exec p2 : [../a.out]
+line2: $$$ exec p2 : [../a.out]

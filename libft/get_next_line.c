@@ -37,10 +37,8 @@ int		read_line(t_gnl *node, char **line)
 	holder = ft_strjoin(node->buf, temp);
 	free(temp);
 	temp = holder;
-	int fd = open("testgnl.txt", O_CREAT | O_RDWR);
 	while ((ret = read(node->fd, node->buf, BUFF_SIZE)) > 0)
 	{
-		dprintf(fd, "line: %s", node->buf);
 		holder = ft_strjoin(temp, node->buf);
 		free(temp);
 		temp = holder;
