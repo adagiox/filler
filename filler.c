@@ -15,9 +15,7 @@ void print_filler(int fd1, t_filler *filler)
 void print_piece(int fd1, t_piece *piece)
 {
 	for(int i = 0; i < piece->height; i++)
-		dprintf(fd1, "%s\n", piece->piece[i]);
-	dprintf(fd1, "\n");
-	dprintf(fd1, "\n");
+		dprintf(fd1, "piece: %s\n", piece->piece[i]);
 }
 
 t_filler *init_filler(char *line)
@@ -81,7 +79,7 @@ int update_board(t_filler *filler, t_player *player, char **line)
 
 // }
 
-int init_piece(int fd1, t_player *player, t_filler *filler, char **line)
+t_piece *init_piece(int fd1, char **line)
 {
 	t_piece *piece;
 	char **p;
@@ -105,8 +103,7 @@ int init_piece(int fd1, t_player *player, t_filler *filler, char **line)
 		dprintf(fd1, "p%i: %s\n", i + 1, p[i]);
 	}
 	piece->piece = p;
-	player->piece = piece;
-	return (1);
+	return (piece);
 }
 
 // int place_piece(t_player *player, t_filler *filler, t_piece *piece)
@@ -136,7 +133,7 @@ int next_line()
 		else if (ft_strstr(line, "Piece ") && ret > 0)
 		{
 			dprintf(fd1, "line: %s\n", line);
-			init_piece(fd1, player, filler, &line);
+			player->piece = init_piece(fd1, &line);
 			dprintf(fd1, "line: %s\n", line);
 			//place_piece(player, filler, piece);
 			print_piece(fd1, player->piece);
@@ -150,6 +147,9 @@ int next_line()
 			print_player(fd1, player);
 			print_filler(fd1, filler);
 		}
+		else 
+			ret = -1;
+		// make sure -1 is returned 
 		close(fd1);
 	}
 	return (ret);
