@@ -36,10 +36,9 @@ char **init_map(t_filler *filler)
 	{
 		map[i] = ft_strnew(filler->width + 1);
 		for (int j = 0; j < filler->width; j++)
-			map[i][j] = ' ';
+			map[i][j] = '1';
 		map[i][filler->width] = '\0';
 	}
-
 	return (map);
 }
 
@@ -63,6 +62,7 @@ t_filler *init_filler(char *line)
 	}
 	filler->board = h;
 	filler->map = init_map(filler);
+	init_mid(filler);
 	return(filler);
 }
 
@@ -106,40 +106,43 @@ int update_board(t_filler *filler, t_player *player, char **line)
 	return (ret);
 }
 
-int init_q1(t_filler *filler, t_player *player, int y, int x)
+// int update_path(t_filler *filler)
+// {
+
+// }
+
+int path_mid(t_filler *filler)
 {
-	int i = 0;
-	int j = 0;
+	int y = filler->height / 2;
+	int x = filler->width / 2;
+	for (int i = y; i < filler->height - y; i++)
+	{
+		for (int j = x; j < filler->width - x; j++)
+		{
+			 filler->map[i][j] = '~';
+		}
+	}
+	return (1);
 }
 
-int init_q2(t_filler *filler, t_player *player, int y, int x)
+int init_mid(t_filler *filler)
 {
-	int i = 0;
-	int j = 0;
-}
-
-int init_q3(t_filler *filler, t_player *player, int y, int x)
-{
-	int i = 0;
-	int j = 0;
-}
-
-int init_q4(t_filler *filler, t_player *player, int y, int x)
-{
-	int i = 0;
-	int j = 0;
-}
-
-int init_mid(t_filler *filler, t_player *player, int y, int x)
-{
-	if (y < filler->height / 2 && x < filler->width / 2)
-		init_q1(filler, player, y, x);
-	else if (y < filler->height / 2 && x > filler->width / 2)
-		init_q2(filler, player, y, x);
-	else if (y > filler->height / 2 && x > filler->width / 2)
-		init_q4(filler, player, y, x);
-	else if (y > filler->height / 2 && x < filler->width / 2)
-		init_q3(filler, player, y, x);
+	int y = filler->height / 2 - 1;
+	int x = filler->width / 2 - 1;
+	while (y > 0 && x > 0)
+	{
+		for (int i = y; i < filler->height - y; i++)
+		{
+			for (int j = x; j < filler->width - x; j++)
+			{
+				 filler->map[i][j] = filler->map[i][j] + 1;
+			}
+		}
+		if (y > 0)
+			y--;
+		if (x > 0)
+			x--;
+	}
 	return (1);
 }
 
@@ -151,11 +154,11 @@ int update_map(t_filler *filler, t_player *player)
 		{
 			if (filler->board[i][j] == player->player_char ||
 				filler->board[i][j] == player->player_char - 32)
-				filler->map[i][j] = '2';
+				filler->map[i][j] = '#';
 			else if (filler->board[i][j] == player->opp_char)
-				filler->map[i][j] = '1';
+				filler->map[i][j] = '$';
 			else if (filler->board[i][j] == player->opp_char - 32)
-				filler->map[i][j] = '3';
+				filler->map[i][j] = '*';
 		}
 	}
 	return (1);
@@ -179,6 +182,7 @@ t_piece *init_piece(int fd1, char **line)
 	piece->width = ft_atoi(*line + ft_countdigits(piece->height) + 1);
 	dprintf(fd1, "height: %i, width: %i\n", piece->height, piece->width);
 	p = (char **)malloc(sizeof(char *) * piece->height);
+	ft_memset(p, '\0', piece->height);
 	for (int i = 0; i < piece->height; i++)
 	{
 		get_next_line(0, line);
@@ -212,7 +216,7 @@ int next_line()
 		ret = get_next_line(0, &line);
 		if (ft_strstr(line, "Plateau ") && ret > 0)
 			ret = get_next_line(0, &line);
-		else if (ft_strstr(line, "  012") && ret > 0)
+		if (ft_strstr(line, "  012") && ret > 0)
 		{
 			update_board(filler, player, &line);
 			update_map(filler, player);
@@ -233,14 +237,14 @@ int next_line()
 			player = init_player(line);
 			ret = get_next_line(0, &line);
 			filler = init_filler(line);
-			init_cross(filler, player);
 			print_player(fd1, player);
 			print_filler(fd1, filler);
 			print_map(fd1, filler);
+			dprintf(fd1, "SETUP COMPLETE\n\n");
 		}
 		else 
 			ret = -1;
-		// make sure -1 is returned 
+		// need to make sure -1 is returned 
 	}
 	close(fd1);
 	return (ret);

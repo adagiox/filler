@@ -35,6 +35,7 @@ t_player *init_player(char *line);
 t_filler *init_filler(char *line);
 int update_board(t_filler *filler, t_player *player, char **line);
 int update_map(t_filler *filler, t_player *player);
+int init_mid(t_filler *filler);
 // int place_piece(t_player *player, t_filler *filler, t_piece *piece);
 t_piece *init_piece(int fd1, char **line);
 // t_piece *reduce_piece(t_piece *piece);
