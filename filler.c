@@ -36,9 +36,10 @@ char **init_map(t_filler *filler)
 	{
 		map[i] = ft_strnew(filler->width + 1);
 		for (int j = 0; j < filler->width; j++)
-			map[i][j] = '0';
+			map[i][j] = ' ';
 		map[i][filler->width] = '\0';
 	}
+
 	return (map);
 }
 
@@ -105,20 +106,56 @@ int update_board(t_filler *filler, t_player *player, char **line)
 	return (ret);
 }
 
+int init_q1(t_filler *filler, t_player *player, int y, int x)
+{
+	int i = 0;
+	int j = 0;
+}
+
+int init_q2(t_filler *filler, t_player *player, int y, int x)
+{
+	int i = 0;
+	int j = 0;
+}
+
+int init_q3(t_filler *filler, t_player *player, int y, int x)
+{
+	int i = 0;
+	int j = 0;
+}
+
+int init_q4(t_filler *filler, t_player *player, int y, int x)
+{
+	int i = 0;
+	int j = 0;
+}
+
+int init_mid(t_filler *filler, t_player *player, int y, int x)
+{
+	if (y < filler->height / 2 && x < filler->width / 2)
+		init_q1(filler, player, y, x);
+	else if (y < filler->height / 2 && x > filler->width / 2)
+		init_q2(filler, player, y, x);
+	else if (y > filler->height / 2 && x > filler->width / 2)
+		init_q4(filler, player, y, x);
+	else if (y > filler->height / 2 && x < filler->width / 2)
+		init_q3(filler, player, y, x);
+	return (1);
+}
+
 int update_map(t_filler *filler, t_player *player)
 {
 	for (int i = 0; i < filler->height; i++)
 	{
 		for (int j = 0; j < filler->width; j++)
 		{
-			if (filler->board[i][j] == '.')
-				filler->map[i][j] = '0';
-			else if (filler->board[i][j] == player->player_char ||
+			if (filler->board[i][j] == player->player_char ||
 				filler->board[i][j] == player->player_char - 32)
 				filler->map[i][j] = '2';
-			else if (filler->board[i][j] == player->opp_char ||
-				filler->board[i][j] == player->opp_char - 32)
+			else if (filler->board[i][j] == player->opp_char)
 				filler->map[i][j] = '1';
+			else if (filler->board[i][j] == player->opp_char - 32)
+				filler->map[i][j] = '3';
 		}
 	}
 	return (1);
@@ -196,6 +233,7 @@ int next_line()
 			player = init_player(line);
 			ret = get_next_line(0, &line);
 			filler = init_filler(line);
+			init_cross(filler, player);
 			print_player(fd1, player);
 			print_filler(fd1, filler);
 			print_map(fd1, filler);
