@@ -111,15 +111,46 @@ int update_board(t_filler *filler, t_player *player, char **line)
 
 // }
 
-int path_mid(t_filler *filler)
+int path_mid(int fd1, t_filler *filler)
 {
-	int y = filler->height / 2;
-	int x = filler->width / 2;
-	for (int i = y; i < filler->height - y; i++)
+	int y;
+	int x;
+	int ydir;
+	int xdir;
+	for (int i = 0; i < filler->height; i++)
 	{
-		for (int j = x; j < filler->width - x; j++)
+		for (int j = 0; j < filler->width; j++)
 		{
-			 filler->map[i][j] = '~';
+			if (filler->map[i][j] == '#')
+			{
+				x = j;
+				y = i;
+				break ;
+			}
+		}
+	}
+	if (x > filler->width / 2)
+		xdir = -1;
+	else 
+		xdir = 1;
+	if (y > filler->height / 2)
+		ydir = -1;
+	else 
+		ydir = 1;
+	while (x != filler->width / 2 || y != filler->height / 2)
+	{
+		if (x != filler->width / 2)
+			x += xdir;
+		if (y != filler->height / 2)
+			y += ydir;
+		filler->map[y][x] = '~';
+	}
+	for (int i = 0; i < filler->height; i++)
+	{
+		for (int j = 0; j < filler->width; j++)
+		{
+			 if (i == filler->height / 2 || j == filler->width / 2)
+			 	filler->map[i][j] = '~';
 		}
 	}
 	return (1);
@@ -194,6 +225,7 @@ t_piece *init_piece(int fd1, char **line)
 		dprintf(fd1, "p%i: %s\n", i + 1, p[i]);
 	}
 	piece->piece = p;
+	dprintf(fd1, "p%i: %s\n", 0, piece->piece[0]);
 	return (piece);
 }
 
@@ -241,6 +273,14 @@ int next_line()
 			print_filler(fd1, filler);
 			print_map(fd1, filler);
 			dprintf(fd1, "SETUP COMPLETE\n\n");
+			ret = get_next_line(0, &line);
+			update_board(filler, player, &line);
+			update_map(filler, player);
+			print_filler(fd1, filler);
+			print_map(fd1, filler);
+			path_mid(fd1, filler);
+			print_filler(fd1, filler);
+			print_map(fd1, filler);
 		}
 		else 
 			ret = -1;
