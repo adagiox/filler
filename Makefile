@@ -4,7 +4,10 @@ all:
 
 debug:
 	make -C ./libft
-	gcc filler.c -L./libft -lft	-g
+	gcc filler.c -L./libft -lft	-g -fsanitize=address
+	rm -rf testing.txt
+	./filler_vm -p1 ./abanlin.filler -p2 ./a.out -f map00
+	chmod +wrx testing.txt
 
 test: all
 	rm -rf testing.txt

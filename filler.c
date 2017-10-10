@@ -189,7 +189,7 @@ int update_map(t_filler *filler, t_player *player)
 			else if (filler->board[i][j] == player->opp_char)
 				filler->map[i][j] = '$';
 			else if (filler->board[i][j] == player->opp_char - 32)
-				filler->map[i][j] = '*';
+				filler->map[i][j] = '+';
 		}
 	}
 	return (1);
@@ -249,30 +249,39 @@ t_piece *init_piece(int fd1, char **line)
 	return (piece);
 }
 
-int check_place(t_filler *filler, t_piece *piece, int y, int x)
+int check_place(int fd1, t_filler *filler, t_piece *piece, int y, int x)
 {
 	int score;
 	int num_char;
 
 	score = -1;
 	num_char = 0;
-	// need to check piece and map together
 	for (int i = piece->h_offset; i < piece->height; i++)
 	{
 		for (int j = piece->w_offset; j < piece->width; j++)
 		{
-			if (filler->map[y][x] == '*' || filler->map[y][x] == '$' ||
-				(filler->map[y][x] == '#' && ++num_char <= 1))
-				return (-1);
-			score += filler->map[y][x];
-			if (++y >= filler->height && ++x >= filler->width)
+			dprintf(fd1, "y:%i, x:%i\n", y, x);
+			if (piece->piece[i][j] == '*')
+			{
+				if (filler->map[y][x] == '+' || filler->map[y][x] == '$')
+					return (-1);
+				if (filler->map[y][x] == '#')
+					num_char++;
+				score += filler->map[y][x];
+			}
+			if (++x >= filler->width)
 				return (-1);
 		}
+		if(++y >= filler->height)
+			return (-1);
 	}
-	return (score);
+	dprintf(fd1, "\n");
+	if (num_char == 1)
+		return (score);
+	return (-1);
 }
 
-int place_piece(t_filler *filler, t_piece *piece)
+int place_piece(int fd1, t_filler *filler, t_piece *piece)
 {
 	int max;
 	int score;
@@ -287,17 +296,23 @@ int place_piece(t_filler *filler, t_piece *piece)
 	{
 		for (int j = 0; j < filler->width; j++)
 		{
-			if ((score = check_place(filler, piece, i, j)) >= max)
+			if ((score = check_place(fd1, filler, piece, i, j)) >= max)
 			{
 				x = j;
 				y = i;
 				max = score;
 			}
+			dprintf(fd1, "score: %i x: %i y: %i\n", score, i, j);
 		}
 	}
+	dprintf(fd1, "max: %i\n", max);
 	if (max > 0)
 	{
-		ft_printf("%i %i", x - piece->w_offset, y - piece->h_offset);
+		print_piece(fd1, piece);
+		dprintf(fd1, "offset: h: %i w: %i\n", piece->h_offset, piece->w_offset);
+		dprintf(fd1, "place: h: %i w: %i\n", y - piece->h_offset, x - piece->w_offset);
+
+		ft_printf("%i %i\n", y - piece->h_offset, x - piece->w_offset);
 		return (1);
 	}
 	return (-1);
@@ -312,9 +327,10 @@ int next_line()
 
 	ret = 1;
 	int fd1 = open("testing.txt", O_CREAT | O_APPEND | O_RDWR);
-	while (ret > 0)
+	while (ret != -1)
 	{
 		ret = get_next_line(0, &line);
+		dprintf(fd1, "ret: %i\n", ret);
 		if (ft_strstr(line, "Plateau ") && ret > 0)
 			ret = get_next_line(0, &line);
 		if (ft_strstr(line, "  012") && ret > 0)
@@ -329,7 +345,7 @@ int next_line()
 			dprintf(fd1, "line: %s\n", line);
 			player->piece = init_piece(fd1, &line);
 			dprintf(fd1, "line: %s\n", line);
-			place_piece(filler, player->piece);
+			place_piece(fd1, filler, player->piece);
 		}
 		else if (ft_strstr(line, "exec") && ret > 0)
 		{
@@ -350,8 +366,6 @@ int next_line()
 			print_filler(fd1, filler);
 			print_map(fd1, filler);
 		}
-		else 
-			ret = -1;
 		// need to make sure -1 is returned 
 	}
 	close(fd1);
