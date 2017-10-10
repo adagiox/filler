@@ -195,10 +195,41 @@ int update_map(t_filler *filler, t_player *player)
 	return (1);
 }
 
-// t_piece *reduce_piece(t_piece *piece)
-// {
+t_piece *set_offset(int fd1, t_piece *piece)
+{
+	int w;
+	int h;
 
-// }
+	w = 0;
+	h = 0;
+	print_piece(fd1, piece);
+	for (int i = 0; i < piece->height; i++)
+	{
+		for (int j = 0; j < piece->width; j++)
+		{
+			if (piece->piece[i][j] == '*')
+			{
+				w = j;
+				break ;
+			}
+		}
+	}
+	for (int i = 0; i < piece->width; i++)
+	{
+		for (int j = 0; j < piece->height; j++)
+		{
+			if (piece->piece[j][i] == '*')
+			{
+				h = j;
+				break ;
+			}
+		}
+	}
+	piece->w_offset = w;
+	piece->h_offset = h;
+	dprintf(fd1, "h:%i w:%i\n", piece->h_offset, piece->w_offset);
+	return (piece);
+}
 
 t_piece *init_piece(int fd1, char **line)
 {
@@ -211,13 +242,11 @@ t_piece *init_piece(int fd1, char **line)
 	*line = *line + 6;
 	piece->height = ft_atoi(*line);
 	piece->width = ft_atoi(*line + ft_countdigits(piece->height) + 1);
-	dprintf(fd1, "height: %i, width: %i\n", piece->height, piece->width);
 	p = (char **)malloc(sizeof(char *) * piece->height);
 	ft_memset(p, '\0', piece->height);
 	for (int i = 0; i < piece->height; i++)
 	{
 		get_next_line(0, line);
-		dprintf(fd1, "line%i: %s\n", i + 1, *line);
 		p[i] = ft_strnew(piece->width + 1);
 		for (int j = 0; j < piece->width; j++)
 			p[i][j] = (*line)[j];
@@ -225,14 +254,62 @@ t_piece *init_piece(int fd1, char **line)
 		dprintf(fd1, "p%i: %s\n", i + 1, p[i]);
 	}
 	piece->piece = p;
-	dprintf(fd1, "p%i: %s\n", 0, piece->piece[0]);
+	piece = set_offset(fd1, piece);
 	return (piece);
 }
 
-// int place_piece(t_player *player, t_filler *filler, t_piece *piece)
-// {
+int check_place(t_filler *filler, t_piece *piece, int y, int x)
+{
+	int score;
+	int num_char;
 
-// }
+	score = -1;
+	num_char = 0;
+	for (int i = piece->h_offset; i < piece->height; i++)
+	{
+		for (int j = piece->w_offset; j < piece->width; j++)
+		{
+			if (filler->map[y][x] == '*' || filler->map[y][x] == '$' ||
+				(filler->map[y][x] == '#' && ++num_char <= 1))
+				return (-1);
+			score += filler->map[y][x];
+			if (++y >= filler->height && ++x >= filler->width)
+				return (-1);
+		}
+	}
+	return (score);
+}
+
+int place_piece(t_filler *filler, t_piece *piece)
+{
+	int max;
+	int score;
+	int x;
+	int y;
+
+	max = 0;
+	score = 0;
+	x = 0;
+	y = 0;
+	for (int i = 0; i < filler->height; i++)
+	{
+		for (int j = 0; j < filler->width; j++)
+		{
+			if ((score = check_place(filler, piece, i, j)) >= max)
+			{
+				x = j;
+				y = i;
+				max = score;
+			}
+		}
+	}
+	if (max > 0)
+	{
+		ft_printf("%i %i", x - piece->w_offset, y - piece->h_offset);
+		return (1);
+	}
+	return (-1);
+}
 
 int next_line()
 {
@@ -260,8 +337,7 @@ int next_line()
 			dprintf(fd1, "line: %s\n", line);
 			player->piece = init_piece(fd1, &line);
 			dprintf(fd1, "line: %s\n", line);
-			//place_piece(player, filler, piece);
-			print_piece(fd1, player->piece);
+			place_piece(filler, player->piece);
 		}
 		else if (ft_strstr(line, "exec") && ret > 0)
 		{

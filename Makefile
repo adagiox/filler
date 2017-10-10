@@ -2,6 +2,10 @@ all:
 	make -C ./libft
 	gcc filler.c -L./libft -lft
 
+debug:
+	make -C ./libft
+	gcc filler.c -L./libft -lft	-g
+
 test: all
 	rm -rf testing.txt
 	./filler_vm -p1 ./abanlin.filler -p2 ./a.out -f map00
