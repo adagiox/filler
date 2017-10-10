@@ -195,21 +195,15 @@ int update_map(t_filler *filler, t_player *player)
 	return (1);
 }
 
-t_piece *set_offset(int fd1, t_piece *piece)
+t_piece *set_offset(t_piece *piece)
 {
-	int w;
-	int h;
-
-	w = 0;
-	h = 0;
-	print_piece(fd1, piece);
 	for (int i = 0; i < piece->height; i++)
 	{
 		for (int j = 0; j < piece->width; j++)
 		{
 			if (piece->piece[i][j] == '*')
 			{
-				w = j;
+				piece->w_offset = j;
 				break ;
 			}
 		}
@@ -220,14 +214,11 @@ t_piece *set_offset(int fd1, t_piece *piece)
 		{
 			if (piece->piece[j][i] == '*')
 			{
-				h = j;
+				piece->h_offset = j;
 				break ;
 			}
 		}
 	}
-	piece->w_offset = w;
-	piece->h_offset = h;
-	dprintf(fd1, "h:%i w:%i\n", piece->h_offset, piece->w_offset);
 	return (piece);
 }
 
@@ -254,7 +245,7 @@ t_piece *init_piece(int fd1, char **line)
 		dprintf(fd1, "p%i: %s\n", i + 1, p[i]);
 	}
 	piece->piece = p;
-	piece = set_offset(fd1, piece);
+	piece = set_offset(piece);
 	return (piece);
 }
 
@@ -265,6 +256,7 @@ int check_place(t_filler *filler, t_piece *piece, int y, int x)
 
 	score = -1;
 	num_char = 0;
+	// need to check piece and map together
 	for (int i = piece->h_offset; i < piece->height; i++)
 	{
 		for (int j = piece->w_offset; j < piece->width; j++)
