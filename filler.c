@@ -259,6 +259,15 @@ t_piece *init_piece(int fd1, char **line)
 	return (piece);
 }
 
+int free_piece(t_player *player)
+{
+	for (int i = 0; i < player->piece->height; i++)
+		free(player->piece->piece[i]);
+	free(player->piece->piece);
+	free(player->piece);
+	return (1);
+}
+
 int check_place(int fd1, t_filler *filler, t_piece *piece, int y, int x)
 {
 	int score;
@@ -360,6 +369,7 @@ int next_line()
 			//dprintf(fd1, "line: %s\n", line);
 			dprintf(fd1, "offset: h: %i w: %i\n", player->piece->h_offset, player->piece->w_offset);
 			place_piece(fd1, filler, player->piece);
+			free_piece(player);
 		}
 		else if (ft_strstr(line, "exec") && ret > 0)
 		{
