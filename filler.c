@@ -195,37 +195,44 @@ int update_map(t_filler *filler, t_player *player)
 	return (1);
 }
 
-t_piece *set_offset(t_piece *piece)
+int set_piece_w(t_piece *piece)
+{
+	for (int i = 0; i < piece->width; i++)
+	{
+		for (int j = 0; j < piece->height; j++)
+		{
+			if (piece->piece[j][i] == '*')
+				return (i);
+		}
+	}
+	return (0);
+}
+
+int set_piece_h(t_piece *piece)
 {
 	for (int i = 0; i < piece->height; i++)
 	{
 		for (int j = 0; j < piece->width; j++)
 		{
 			if (piece->piece[i][j] == '*')
-			{
-				piece->w_offset = j;
-				break ;
-			}
+				return (i);
 		}
 	}
-	for (int i = 0; i < piece->width; i++)
-	{
-		for (int j = 0; j < piece->height; j++)
-		{
-			if (piece->piece[j][i] == '*')
-			{
-				piece->h_offset = j;
-				break ;
-			}
-		}
-	}
+	return (0);
+}
+
+t_piece *set_offset(int fd1, t_piece *piece)
+{
+	print_piece(fd1, piece);
+	piece->w_offset = set_piece_w(piece);
+	piece->h_offset = set_piece_h(piece);
 	return (piece);
 }
 
 t_piece *init_piece(int fd1, char **line)
 {
 	t_piece *piece;
-	char **p;
+	char *p;
 
 	piece = (t_piece *)malloc(sizeof(piece));
 	piece->w_offset = 0;
@@ -233,19 +240,22 @@ t_piece *init_piece(int fd1, char **line)
 	*line = *line + 6;
 	piece->height = ft_atoi(*line);
 	piece->width = ft_atoi(*line + ft_countdigits(piece->height) + 1);
-	p = (char **)malloc(sizeof(char *) * piece->height);
-	ft_memset(p, '\0', piece->height);
+	dprintf(fd1, "h: %i w: %i\n", piece->height, piece->width);
+	piece->piece = (char **)malloc(sizeof(char *) * piece->height);
+	ft_memset(piece->piece, '\0', piece->height);
 	for (int i = 0; i < piece->height; i++)
 	{
 		get_next_line(0, line);
-		p[i] = ft_strnew(piece->width + 1);
-		ft_memset(p[i], '\0', piece->width + 1);
-		for (int j = 0; j < piece->width; j++)
-			p[i][j] = (*line)[j];
-		p[i][piece->width] = '\0';
-		piece->piece[i] = p[i];
+		p = ft_strnew(piece->width + 1);
+		// ft_memset(p[i], '\0', piece->width + 1);
+		for (int j = 0; j < piece->width + 1; j++)
+			p[j] = (*line)[j];
+		// p[i][piece->width] = '\0';
+		piece->piece[i] = p;
 	}
-	piece = set_offset(piece);
+	piece = set_offset(fd1, piece);
+	print_piece(fd1, piece);
+	//dprintf(fd1, "offset: h: %i w: %i\n", piece->h_offset, piece->w_offset);
 	return (piece);
 }
 
@@ -253,16 +263,21 @@ int check_place(int fd1, t_filler *filler, t_piece *piece, int y, int x)
 {
 	int score;
 	int num_char;
+	int b_col;
 
-	score = -1;
+	b_col = x;
+	score = 0;
 	num_char = 0;
 	for (int i = piece->h_offset; i < piece->height; i++)
 	{
+		x = b_col;
 		for (int j = piece->w_offset; j < piece->width; j++)
-		{
-			dprintf(fd1, "y:%i, x:%i\n", y, x);
+		{		
+			//dprintf(fd1, "y:%i, x:%i\n", y, x);
 			if (piece->piece[i][j] == '*')
 			{
+				if (x >= filler->width || y >= filler->height)
+					return (-1);
 				if (filler->map[y][x] == '+' || filler->map[y][x] == '$')
 					return (-1);
 				if (filler->map[y][x] == '#')
@@ -270,14 +285,10 @@ int check_place(int fd1, t_filler *filler, t_piece *piece, int y, int x)
 				score += filler->map[y][x];
 			}
 			x++;
-			if (x >= filler->width)
-				return (-1);
 		}
 		y++;
-		if(y >= filler->height)
-			return (-1);
 	}
-	dprintf(fd1, "\n");
+	//dprintf(fd1, "\n");
 	if (num_char == 1)
 		return (score);
 	return (-1);
@@ -304,7 +315,7 @@ int place_piece(int fd1, t_filler *filler, t_piece *piece)
 				y = i;
 				max = score;
 			}
-			dprintf(fd1, "score: %i x: %i y: %i\n", score, j, i);
+			//dprintf(fd1, "score: %i x: %i y: %i\n", score, j, i);
 		}
 	}
 	dprintf(fd1, "max: %i\n", max);
@@ -344,15 +355,15 @@ int next_line()
 		}
 		else if (ft_strstr(line, "Piece ") && ret > 0)
 		{
-			dprintf(fd1, "line: %s\n", line);
+			//dprintf(fd1, "line: %s\n", line);
 			player->piece = init_piece(fd1, &line);
-			dprintf(fd1, "line: %s\n", line);
+			//dprintf(fd1, "line: %s\n", line);
 			dprintf(fd1, "offset: h: %i w: %i\n", player->piece->h_offset, player->piece->w_offset);
 			place_piece(fd1, filler, player->piece);
 		}
 		else if (ft_strstr(line, "exec") && ret > 0)
 		{
-			dprintf(fd1, "line: %s\n", line);
+			//dprintf(fd1, "line: %s\n", line);
 			player = init_player(line);
 			ret = get_next_line(0, &line);
 			filler = init_filler(line);
