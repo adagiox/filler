@@ -1,6 +1,5 @@
-seed = 5276
+seed = 1656
 X: error on input
-./a.out: Segfault at 6
 ./abanlin.filler won
 Score:
-141AGAINST6
+105AGAINST0

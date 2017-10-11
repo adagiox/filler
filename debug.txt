@@ -1,1 +1,53 @@
-make: *** [test] Error 1
+=================================================================
+==46326==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x60200000e8b8 at pc 0x0001018a52b8 bp 0x7fff5e35e670 sp 0x7fff5e35e668
+WRITE of size 4 at 0x60200000e8b8 thread T0
+==46326==atos returned an error: An admin user name and password is required to enter Developer Mode.
+    #0 0x1018a52b7 in init_piece (/nfs/2017/e/erintala/Documents/42/filler/./a.out+0x1000042b7)
+    #1 0x1018a70e0 in next_line (/nfs/2017/e/erintala/Documents/42/filler/./a.out+0x1000060e0)
+    #2 0x1018a75a4 in main (/nfs/2017/e/erintala/Documents/42/filler/./a.out+0x1000065a4)
+    #3 0x7fff89f505ac in start (/usr/lib/system/libdyld.dylib+0x35ac)
+
+0x60200000e8b8 is located 0 bytes to the right of 8-byte region [0x60200000e8b0,0x60200000e8b8)
+allocated by thread T0 here:
+    #0 0x1018ffc60 in wrap_malloc (/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/8.0.0/lib/darwin/libclang_rt.asan_osx_dynamic.dylib+0x4ac60)
+    #1 0x1018a5241 in init_piece (/nfs/2017/e/erintala/Documents/42/filler/./a.out+0x100004241)
+    #2 0x1018a70e0 in next_line (/nfs/2017/e/erintala/Documents/42/filler/./a.out+0x1000060e0)
+    #3 0x1018a75a4 in main (/nfs/2017/e/erintala/Documents/42/filler/./a.out+0x1000065a4)
+    #4 0x7fff89f505ac in start (/usr/lib/system/libdyld.dylib+0x35ac)
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow (/nfs/2017/e/erintala/Documents/42/filler/./a.out+0x1000042b7) in init_piece
+Shadow bytes around the buggy address:
+  0x1c0400001cc0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x1c0400001cd0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x1c0400001ce0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x1c0400001cf0: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+  0x1c0400001d00: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
+=>0x1c0400001d10: fa fa fa fa fa fa 00[fa]fa fa 00 03 fa fa fd fd
+  0x1c0400001d20: fa fa fd fd fa fa fd fd fa fa fd fa fa fa fd fd
+  0x1c0400001d30: fa fa fd fd fa fa fd fa fa fa fd fd fa fa fd fa
+  0x1c0400001d40: fa fa fd fd fa fa fd fd fa fa fd fd fa fa fd fd
+  0x1c0400001d50: fa fa fd fd fa fa fd fd fa fa fd fa fa fa fd fd
+  0x1c0400001d60: fa fa fd fd fa fa fd fa fa fa fd fd fa fa fd fa
+Shadow byte legend (one shadow byte represents 8 application bytes):
+  Addressable:           00
+  Partially addressable: 01 02 03 04 05 06 07 
+  Heap left redzone:       fa
+  Heap right redzone:      fb
+  Freed heap region:       fd
+  Stack left redzone:      f1
+  Stack mid redzone:       f2
+  Stack right redzone:     f3
+  Stack partial redzone:   f4
+  Stack after return:      f5
+  Stack use after scope:   f8
+  Global redzone:          f9
+  Global init order:       f6
+  Poisoned by user:        f7
+  Container overflow:      fc
+  Array cookie:            ac
+  Intra object redzone:    bb
+  ASan internal:           fe
+  Left alloca redzone:     ca
+  Right alloca redzone:    cb
+==46326==ABORTING
+make: *** [debug] Error 1

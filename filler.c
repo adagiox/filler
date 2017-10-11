@@ -233,11 +233,16 @@ t_piece *set_offset(int fd1, t_piece *piece)
 t_piece *init_piece(int fd1, char **line)
 {
 	t_piece *piece;
-
+	dprintf(fd1, "Before printing line\n");
+	dprintf(fd1, "line: %s\n", *line);
 	piece = (t_piece *)malloc(sizeof(piece));
+	if (piece == NULL)
+		dprintf(fd1, "piece null\n");
 	piece->w_offset = 0;
 	piece->h_offset = 0;
-	*line = *line + 6;
+	dprintf(fd1, "Before height\n");
+	*line = (*line) + 6;
+	dprintf(fd1, "Before height\n");
 	piece->height = ft_atoi(*line);
 	piece->width = ft_atoi(*line + ft_countdigits(piece->height) + 1);
 	dprintf(fd1, "h: %i w: %i\n", piece->height, piece->width);
@@ -274,6 +279,7 @@ int free_piece(int fd1, t_player *player)
 		free(player->piece->piece[i]);
 	//free(player->piece->piece);
 	free(player->piece);
+	dprintf(fd1, "Free successful\n");
 	return (1);
 }
 
