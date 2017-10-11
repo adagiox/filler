@@ -10,21 +10,16 @@ typedef struct	s_filler
 	char **map;
 }				t_filler;
 
-typedef struct	s_piece
-{
-	int width;
-	int height;
-	int w_offset;
-	int h_offset;
-	char **piece;
-}				t_piece;
-
 typedef struct	s_player
 {
 	int player; /* p1, p2 */
 	char player_char; /* X or O */
 	char opp_char; /* X or O */
-	t_piece *piece; /* Current piece */
+	int width;
+	int height;
+	int w_offset;
+	int h_offset;
+	char **piece;
 }				t_player;
 
 void print_player(int fd1, t_player *player);

@@ -1,5 +1,5 @@
-seed = 1656
-X: error on input
+seed = 6311
+O: error on input
 ./abanlin.filler won
 Score:
-105AGAINST0
+0AGAINST0

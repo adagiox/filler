@@ -72,7 +72,7 @@ t_player *init_player(char *line)
 	t_player *player;
 	char *p;
 
-	player = (t_player*)malloc(sizeof(t_player));
+	player = ft_memalloc(sizeof(t_player));
 	p = ft_strstr(line, " p");
 	player->player = *(p + 2) - 48;
 	if (player->player == 1)
@@ -230,54 +230,116 @@ t_piece *set_offset(int fd1, t_piece *piece)
 	return (piece);
 }
 
-t_piece *init_piece(int fd1, char **line)
+int get_piece(char *line, t_piece *piece)
 {
-	t_piece *piece;
-	dprintf(fd1, "Before printing line\n");
-	dprintf(fd1, "line: %s\n", *line);
-	piece = (t_piece *)malloc(sizeof(piece));
-	if (piece == NULL)
-		dprintf(fd1, "piece null\n");
+	int row = 0;
+
+	while(row < piece->height)
+	{
+		int i = 0;
+		get_next_line(0, &line);
+		while (line[i])
+		{
+			piece->piece[row][i] = line[i];
+			i++;
+		}
+		row++;
+	}
+	return 1;
+}
+
+t_piece *init_piece(int fd1, t_player *player, char **line)
+{
+	player->piece = ft_memalloc(sizeof(piece));
 	piece->w_offset = 0;
 	piece->h_offset = 0;
-	dprintf(fd1, "Before height\n");
 	*line = (*line) + 6;
-	dprintf(fd1, "Before height\n");
 	piece->height = ft_atoi(*line);
-	piece->width = ft_atoi(*line + ft_countdigits(piece->height) + 1);
-	dprintf(fd1, "h: %i w: %i\n", piece->height, piece->width);
-	piece->piece = (char **)malloc(sizeof(char *) * piece->height);
-	ft_memset(piece->piece, '\0', piece->height);
-	for (int i = 0; i < piece->height; i++)
+	*line += ft_countdigits(piece->height) + 1;
+	piece->width = ft_atoi(*line);
+	*line -= (ft_countdigits(piece->height) + 7);
+	piece->piece = malloc(sizeof(char *) * piece->height);
+	ft_bzero(piece->piece, piece->height);
+	int row = 0;
+	while (row < piece->height)
 	{
-		char *p;
-		get_next_line(0, line);
-		dprintf(fd1, "line: %s\n", *line);
-		p = ft_strnew(piece->width + 1);
-		if (p == NULL)
-			dprintf(fd1, "NULL!!!!!\n");	
-		dprintf(fd1, "line: %s\n", *line);
-		ft_memset(p, '\0', piece->width + 1);
-		for (int j = 0; j < piece->width; j++)
-			p[j] = line[0][j];
-		p[piece->width] = '\0';
-		dprintf(fd1, "piece: %s\n", p);
-		piece->piece[i] = p;
-		dprintf(fd1, "after assign\n");
+		piece->piece[row] = ft_memalloc(sizeof(char) * (piece->width));
+		row++;
 	}
-	dprintf(fd1, "Before offset\n");
+	get_piece(*line, piece);
 	piece = set_offset(fd1, piece);
-	print_piece(fd1, piece);
-	//dprintf(fd1, "offset: h: %i w: %i\n", piece->h_offset, piece->w_offset);
-	return (piece);
+	return piece;
 }
+
+
+
+// t_piece *init_piece(int fd1, char **line)
+// {
+// 	// t_piece *piece;
+// 	// dprintf(fd1, "Before printing line\n");
+// 	// dprintf(fd1, "line: %s\n", *line);
+// 	// piece = (t_piece *)malloc(sizeof(piece));
+// 	// if (piece == NULL)
+// 	// 	dprintf(fd1, "piece null\n");
+// 	// piece->w_offset = 0;
+// 	// piece->h_offset = 0;
+// 	// *line = (*line) + 6;
+// 	// piece->height = ft_atoi(*line);
+// 	// *line += ft_countdigits(piece->height) + 1;
+// 	// piece->width = ft_atoi(*line);
+// 	// *line -= (ft_countdigits(piece->height) + 7);
+// 	// dprintf(fd1, "piece height: %i piece width: %i\n", piece->height, piece->width);
+// 	// piece->piece = (char **)malloc(sizeof(char *) * piece->height + 50);
+// 	// ft_memset(piece->piece, '\0', piece->height);
+// 	// //dprintf(fd1, "Piece:\n");
+	
+// 	int ret = 0;
+// 	for (int i = 0; i < piece->height; i++)
+// 	{
+// 		char *p;
+// 		dprintf(fd1, "width: %i\n", piece->width);
+// 		dprintf(fd1, "before assign\n");
+// 		ft_strdel(line);
+// 		ret = get_next_line(0, line);
+// 		dprintf(fd1, "ret: %i\n", ret);
+// 		dprintf(fd1, "line: %s\n", *line);
+// 		piece->piece[i] = ft_memalloc(sizeof(char) * (piece->width + 50));	
+		
+// 		dprintf(fd1, "hello\n");
+// 		if (piece->piece[i] == NULL)
+// 		{
+// 			dprintf(fd1, "NULLLLLLLLLLL\n");
+// 		}
+// 		//dprintf(fd1, "line: %s\n", *line);
+// 		//ft_memset(p, '\0', piece->width + 1);
+// 		int j = 0;
+// 		dprintf(fd1, "width: %i\n", piece->width);
+// 		while (j < piece->width)
+// 		{
+// 			dprintf(fd1, "i: %i\n", i);
+// 			dprintf(fd1, "piece[%i]: %s\n", i, piece->piece[i]);
+// 			piece->piece[i][j] = line[0][j];
+// 			j++;
+// 		}
+// 		//p[piece->width] = '\0';
+		
+// 		dprintf(fd1, "piece after assign: %s\n", piece->piece[i]);
+		
+// 		dprintf(fd1, "after assign\n");
+// 	}
+// 	dprintf(fd1, "Before offset\n");
+// 	piece = set_offset(fd1, piece);
+// 	print_piece(fd1, piece);
+// 	//dprintf(fd1, "offset: h: %i w: %i\n", piece->h_offset, piece->w_offset);
+// 	return (piece);
+// }
 
 int free_piece(int fd1, t_player *player)
 {
 	dprintf(fd1, "Free piece\n");
 	for (int i = 0; i < player->piece->height; i++)
 		free(player->piece->piece[i]);
-	//free(player->piece->piece);
+	free(player->piece->piece);
 	free(player->piece);
 	dprintf(fd1, "Free successful\n");
 	return (1);
