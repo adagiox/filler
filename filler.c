@@ -239,12 +239,12 @@ t_piece *init_piece(int fd1, char **line)
 	{
 		get_next_line(0, line);
 		p[i] = ft_strnew(piece->width + 1);
+		ft_memset(p[i], '\0', piece->width + 1);
 		for (int j = 0; j < piece->width; j++)
 			p[i][j] = (*line)[j];
 		p[i][piece->width] = '\0';
-		dprintf(fd1, "p%i: %s\n", i + 1, p[i]);
+		piece->piece[i] = p[i];
 	}
-	piece->piece = p;
 	piece = set_offset(piece);
 	return (piece);
 }
@@ -269,10 +269,12 @@ int check_place(int fd1, t_filler *filler, t_piece *piece, int y, int x)
 					num_char++;
 				score += filler->map[y][x];
 			}
-			if (++x >= filler->width)
+			x++;
+			if (x >= filler->width)
 				return (-1);
 		}
-		if(++y >= filler->height)
+		y++;
+		if(y >= filler->height)
 			return (-1);
 	}
 	dprintf(fd1, "\n");
@@ -302,7 +304,7 @@ int place_piece(int fd1, t_filler *filler, t_piece *piece)
 				y = i;
 				max = score;
 			}
-			dprintf(fd1, "score: %i x: %i y: %i\n", score, i, j);
+			dprintf(fd1, "score: %i x: %i y: %i\n", score, j, i);
 		}
 	}
 	dprintf(fd1, "max: %i\n", max);
@@ -345,6 +347,7 @@ int next_line()
 			dprintf(fd1, "line: %s\n", line);
 			player->piece = init_piece(fd1, &line);
 			dprintf(fd1, "line: %s\n", line);
+			dprintf(fd1, "offset: h: %i w: %i\n", player->piece->h_offset, player->piece->w_offset);
 			place_piece(fd1, filler, player->piece);
 		}
 		else if (ft_strstr(line, "exec") && ret > 0)
