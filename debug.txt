@@ -1,4 +1,1 @@
-=================================================================
-==16881==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x60200000e8b8 at pc 0x000105ec8e45 bp 0x7fff59d3a730 sp 0x7fff59d3a728
-WRITE of size 4 at 0x60200000e8b8 thread T0
-make: *** [debug] Error 214
+make: *** [test] Error 1

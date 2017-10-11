@@ -22,6 +22,7 @@ void print_map(int fd1, t_filler *filler)
 
 void print_piece(int fd1, t_piece *piece)
 {
+	dprintf(fd1, "Print piece:\n");
 	for(int i = 0; i < piece->height; i++)
 		dprintf(fd1, "piece: %s\n", piece->piece[i]);
 	dprintf(fd1, "\n");
@@ -232,7 +233,6 @@ t_piece *set_offset(int fd1, t_piece *piece)
 t_piece *init_piece(int fd1, char **line)
 {
 	t_piece *piece;
-	char *p;
 
 	piece = (t_piece *)malloc(sizeof(piece));
 	piece->w_offset = 0;
@@ -245,25 +245,34 @@ t_piece *init_piece(int fd1, char **line)
 	ft_memset(piece->piece, '\0', piece->height);
 	for (int i = 0; i < piece->height; i++)
 	{
+		char *p;
 		get_next_line(0, line);
+		dprintf(fd1, "line: %s\n", *line);
 		p = ft_strnew(piece->width + 1);
-		// ft_memset(p[i], '\0', piece->width + 1);
-		for (int j = 0; j < piece->width + 1; j++)
-			p[j] = (*line)[j];
-		// p[i][piece->width] = '\0';
+		if (p == NULL)
+			dprintf(fd1, "NULL!!!!!\n");	
+		dprintf(fd1, "line: %s\n", *line);
+		ft_memset(p, '\0', piece->width + 1);
+		for (int j = 0; j < piece->width; j++)
+			p[j] = line[0][j];
+		p[piece->width] = '\0';
+		dprintf(fd1, "piece: %s\n", p);
 		piece->piece[i] = p;
+		dprintf(fd1, "after assign\n");
 	}
+	dprintf(fd1, "Before offset\n");
 	piece = set_offset(fd1, piece);
 	print_piece(fd1, piece);
 	//dprintf(fd1, "offset: h: %i w: %i\n", piece->h_offset, piece->w_offset);
 	return (piece);
 }
 
-int free_piece(t_player *player)
+int free_piece(int fd1, t_player *player)
 {
+	dprintf(fd1, "Free piece\n");
 	for (int i = 0; i < player->piece->height; i++)
 		free(player->piece->piece[i]);
-	free(player->piece->piece);
+	//free(player->piece->piece);
 	free(player->piece);
 	return (1);
 }
@@ -364,12 +373,12 @@ int next_line()
 		}
 		else if (ft_strstr(line, "Piece ") && ret > 0)
 		{
-			//dprintf(fd1, "line: %s\n", line);
+			dprintf(fd1, "line: %s\n", line);
 			player->piece = init_piece(fd1, &line);
 			//dprintf(fd1, "line: %s\n", line);
 			dprintf(fd1, "offset: h: %i w: %i\n", player->piece->h_offset, player->piece->w_offset);
 			place_piece(fd1, filler, player->piece);
-			free_piece(player);
+			free_piece(fd1, player);
 		}
 		else if (ft_strstr(line, "exec") && ret > 0)
 		{
