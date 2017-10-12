@@ -116,8 +116,7 @@ int path_mid(int fd1, t_filler *filler)
 {
 	int y;
 	int x;
-	int ydir;
-	int xdir;
+
 	for (int i = 0; i < filler->height; i++)
 	{
 		for (int j = 0; j < filler->width; j++)
@@ -126,36 +125,39 @@ int path_mid(int fd1, t_filler *filler)
 			{
 				x = j;
 				y = i;
+				filler->start_row = y;
+				filler->start_col = x;
 				break ;
 			}
 		}
 	}
-	if (x > filler->width / 2)
-		xdir = -1;
-	else 
-		xdir = 1;
-	if (y > filler->height / 2)
-		ydir = -1;
-	else 
-		ydir = 1;
-	while (x != filler->width / 2 || y != filler->height / 2)
-	{
-		if (x != filler->width / 2)
-			x += xdir;
-		if (y != filler->height / 2)
-			y += ydir;
-		filler->map[y][x] = '~';
-	}
-	for (int i = 0; i < filler->height; i++)
-	{
-		for (int j = 0; j < filler->width; j++)
-		{
-			 if (i == filler->height / 2 || j == filler->width / 2)
-			 	filler->map[i][j] = '~';
-		}
-	}
+	checker(filler);
 	return (1);
 }
+
+void	checker(t_filler *filler)
+{
+	int row;
+	int col;
+
+	row = 0;
+	while (row < filler->height)
+	{
+		col = 0;
+		while (col < filler->width)
+		{
+			if ((col == filler->start_col && row <= filler->start_row) ||
+				row == 2)
+			{
+				if (filler->map[row][col] != '#')
+					filler->map[row][col] = '~';
+			}
+			col++;
+		}
+		row++;
+	}
+}
+
 
 int init_mid(t_filler *filler)
 {

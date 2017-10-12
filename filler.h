@@ -4,10 +4,12 @@
 
 typedef struct	s_filler
 {
-	int width;
-	int height;
-	char **board;
-	char **map;
+	int		width;
+	int		height;
+	char	**board;
+	char	**map;
+	int		start_row;
+	int		start_col;
 }				t_filler;
 
 typedef struct	s_player
@@ -43,3 +45,4 @@ void	set_piece_row(int fd1, t_player *player);
 void	set_offset(int fd1, t_player *player);
 int		check_place(int fd1, t_filler *filler, t_player *player, int y, int x);
 void	print_piece(int fd1, t_player *player);
+void	checker(t_filler *filler);

@@ -8,9 +8,7 @@ debug:
 
 
 test: all
-	rm -rf testing.txt
-	./filler_vm -p2 ./carli.filler -p1 ./a.out -f map02
-	chmod +wrx testing.txt
+	./filler_vm -p1 ./superjeannot.filler -p2 ./a.out -f map01
 
 test2: all
 	rm -rf testing.txt
