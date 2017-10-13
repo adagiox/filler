@@ -8,7 +8,7 @@ debug:
 
 
 test: all
-	./filler_vm -p1 ./superjeannot.filler -p2 ./a.out -f map01
+	./filler_vm -p1 ./carli.filler -p2 ./a.out -f map01
 
 test2: all
 	rm -rf testing.txt
