@@ -26,7 +26,7 @@ typedef struct	s_player
 
 // void print_player(int fd1, t_player *player);
 // void print_filler(int fd1, t_filler *filler);
-// void print_map(int fd1, t_filler *filler);
+void print_map(t_filler *filler);
 t_player *init_player(char *line);
 t_filler *init_filler(char *line);
 int update_board(t_filler *filler, t_player *player, char **line);

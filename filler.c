@@ -13,12 +13,14 @@
 // 	dprintf(fd1, "\n");
 // }
 
-// void print_map(int fd1, t_filler *filler)
-// {
-// 	for (int i = 0; i < filler->height; i++)
-// 		dprintf(fd1, "%s\n", filler->map[i]);
-// 	dprintf(fd1, "\n");
-// }
+void print_map(t_filler *filler)
+{
+	int fd1 = open("testing.txt", O_CREAT | O_RDWR);
+	for (int i = 0; i < filler->height; i++)
+		dprintf(fd1, "%s\n", filler->map[i]);
+	dprintf(fd1, "\n");
+	close(fd1);
+}
 
 // void print_piece(int fd1, t_player *player)
 // {
@@ -52,7 +54,6 @@ t_filler *init_filler(char *line)
 	char **h;
 	int i;
 	int j;
-
 	i = 0;
 	j = 0;
 	filler = (t_filler *)malloc(sizeof(t_filler));
@@ -103,18 +104,23 @@ int update_board(t_filler *filler, t_player *player, char **line)
 {
 	char *l;
 	int ret;
-	
+	int i;
+	int j;
 
 	ret = 0;
-	for (int i = 0; i < filler->height; i++)
+	i = 0;
+	while (i < filler->height)
 	{
+		j = 0;
 		ret = get_next_line(0, line);
 		l = *line + 4;
-		for (int j = 0; j < filler->width; j++)
+		while (j < filler->width)
 		{
 			filler->board[i][j] = *l;
 			l++;
+			j++;
 		}
+		i++;
 	}
 	return (ret);
 }
@@ -123,10 +129,14 @@ int path_mid(t_filler *filler)
 {
 	int y;
 	int x;
+	int i;
+	int j;
 
-	for (int i = 0; i < filler->height; i++)
+	i = 0;
+	while (i < filler->height)
 	{
-		for (int j = 0; j < filler->width; j++)
+		j = 0;
+		while (j < filler->width)
 		{
 			if (filler->map[i][j] == '#')
 			{
@@ -136,13 +146,15 @@ int path_mid(t_filler *filler)
 				filler->start_col = x;
 				break ;
 			}
+			j++;
 		}
+		i++;
 	}
 	checker(filler);
 	return (1);
 }
 
-void	checker(t_filler *filler)
+void	start_bot(t_filler *filler)
 {
 	int row;
 	int col;
@@ -153,8 +165,8 @@ void	checker(t_filler *filler)
 		col = 0;
 		while (col < filler->width)
 		{
-			if ((col == filler->start_col && row <= filler->start_row) ||
-				row == 2)
+			if (row == filler->start_row || row == 2 || col == 0 || 
+				col == filler->width - 2 || col == filler->width / 2)
 			{
 				if (filler->map[row][col] != '#')
 					filler->map[row][col] = '~';
@@ -165,6 +177,37 @@ void	checker(t_filler *filler)
 	}
 }
 
+void	start_top(t_filler *filler)
+{
+	int row;
+	int col;
+
+	row = 0;
+	while (row < filler->height)
+	{
+		col = 0;
+		while (col < filler->width)
+		{
+			if (row == filler->start_row || row == filler->height - 2 || col == 0 || 
+				col == filler->width - 2 || col == filler->width / 2)
+			{
+				if (filler->map[row][col] != '#')
+					filler->map[row][col] = '~';
+			}
+			col++;
+		}
+		row++;
+	}
+}
+
+void	checker(t_filler *filler)
+{
+	if (filler->start_row >= filler->height / 2)
+		start_bot(filler);
+	else
+		start_top(filler);
+}
+
 int init_mid(t_filler *filler)
 {
 	int i;
@@ -172,14 +215,14 @@ int init_mid(t_filler *filler)
 	int y;
 	int x;
 
-	i = 0;
 	y = filler->height / 2 - 1;
 	x = filler->width / 2 - 1;
 	while (y > 0 && x > 0)
 	{
+		i = y;
 		while (i < filler->height - y)
 		{
-			j = 0;
+			j = x;
 			while (j < filler->width - x)
 			{
 				 filler->map[i][j] = filler->map[i][j] + 1;
@@ -315,8 +358,14 @@ void	init_piece(char **line, t_player *player)
 
 int free_piece(t_player *player)
 {
-	for (int i = 0; i < player->p_rows; i++)
+	int i;
+	
+	i = 0;
+	while (i < player->p_rows)
+	{
 		free(player->piece[i]);
+		i++;
+	}
 	free(player->piece);
 	return (1);
 }
@@ -326,14 +375,18 @@ int check_place(t_filler *filler, t_player *player, int y, int x)
 	int score;
 	int num_char;
 	int b_col;
+	int i;
+	int j;
 
 	b_col = x;
 	score = 0;
 	num_char = 0;
-	for (int i = player->row_offset; i < player->p_rows; i++)
+	i = player->row_offset;
+	while (i < player->p_rows)
 	{
 		x = b_col;
-		for (int j = player->col_offset; j < player->p_cols; j++)
+		j = player->col_offset;
+		while (j < player->p_cols)
 		{		
 			if (player->piece[i][j] == '*')
 			{
@@ -346,8 +399,10 @@ int check_place(t_filler *filler, t_player *player, int y, int x)
 				score += filler->map[y][x];
 			}
 			x++;
+			j++;
 		}
 		y++;
+		i++;
 	}
 	if (num_char == 1)
 		return (score);
@@ -360,15 +415,18 @@ int place_piece(t_filler *filler, t_player *player)
 	int score;
 	int x;
 	int y;
+	int i;
+	int j;
 
 	max = 0;
 	score = 0;
 	x = 0;
 	y = 0;
-	
-	for (int i = 0; i < filler->height; i++)
+	i = 0;
+	while (i < filler->height)
 	{
-		for (int j = 0; j < filler->width; j++)
+		j = 0;
+		while (j < filler->width)
 		{
 			if ((score = check_place(filler, player, i, j)) >= max)
 			{
@@ -376,7 +434,9 @@ int place_piece(t_filler *filler, t_player *player)
 				y = i;
 				max = score;
 			}
+			j++;
 		}
+		i++;
 	}
 	if (max > 0)
 	{
@@ -403,6 +463,7 @@ int next_line()
 		{
 			update_board(filler, player, &line);
 			update_map(filler, player);
+			print_map(filler);
 		}
 		else if (ft_strstr(line, "Piece ") && ret > 0)
 		{
@@ -424,6 +485,7 @@ int next_line()
 			update_board(filler, player, &line);
 			update_map(filler, player);
 			path_mid(filler);
+			print_map(filler);
 		}
 	}
 	return (0);
