@@ -62,6 +62,9 @@ t_player *init_player(char *line)
 	char *p;
 
 	player = ft_memalloc(sizeof(t_player));
+	player->num_char = 0;
+	player->score = 0;
+	player->b_col = 0;
 	p = ft_strstr(line, " p");
 	player->player = *(p + 2) - 48;
 	if (player->player == 1)

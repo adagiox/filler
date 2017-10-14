@@ -22,6 +22,9 @@ typedef struct	s_player
 	int		col_offset;
 	int		row_offset;
 	char	**piece;
+	int		score;
+	int		num_char;
+	int		b_col;
 }				t_player;
 
 t_player	*init_player(char *line);
@@ -41,6 +44,7 @@ void		get_piece(char *line, t_player *player);
 int			init_piece(char **line, t_player *player);
 int			free_piece(t_player *player);
 int			place_piece(t_filler *filler, t_player *player);
+int			check_valid(t_player *player, t_filler *filler, int x, int y);
 int			check_place(t_filler *filler, t_player *player, int y, int x);
 void		set_piece_col(t_player *player);
 void		set_piece_row(t_player *player);

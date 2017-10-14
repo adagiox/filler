@@ -40,33 +40,42 @@ int place_piece(t_filler *filler, t_player *player)
 	return (print_place(y, x, max, player));
 }
 
+int check_valid(t_player *player, t_filler *filler, int x, int y)
+{
+	if (x >= filler->width || y >= filler->height)
+		return (-1);
+	if (filler->map[y][x] == '+' || filler->map[y][x] == '$')
+		return (-1);
+	if (filler->map[y][x] == '#')
+		player->num_char++;
+	player->score += filler->map[y][x];
+	return (1);
+}
+
+int set_place(t_filler *filler, t_player *player, int x)
+{
+	player->b_col = x;
+	player->score = 0;
+	player->num_char = 0;
+	return (player->row_offset);
+}
+
 int check_place(t_filler *filler, t_player *player, int y, int x)
 {
-	int score;
-	int num_char;
-	int b_col;
 	int i;
 	int j;
 
-	b_col = x;
-	score = 0;
-	num_char = 0;
-	i = player->row_offset;
+	i = set_place(filler, player, x);
 	while (i < player->p_rows)
 	{
-		x = b_col;
+		x = player->b_col;
 		j = player->col_offset;
 		while (j < player->p_cols)
 		{		
 			if (player->piece[i][j] == '*')
 			{
-				if (x >= filler->width || y >= filler->height)
+				if (check_valid(player, filler, x, y) == -1)
 					return (-1);
-				if (filler->map[y][x] == '+' || filler->map[y][x] == '$')
-					return (-1);
-				if (filler->map[y][x] == '#')
-					num_char++;
-				score += filler->map[y][x];
 			}
 			x++;
 			j++;
@@ -74,7 +83,7 @@ int check_place(t_filler *filler, t_player *player, int y, int x)
 		y++;
 		i++;
 	}
-	if (num_char == 1)
-		return (score);
+	if (player->num_char == 1)
+		return (player->score);
 	return (-1);
 }
