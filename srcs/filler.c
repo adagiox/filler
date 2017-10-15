@@ -14,10 +14,6 @@
 
 int	main(void)
 {
-	int done;
-
-	done = 1;
-	while (done > 0)
-		done = filler();
+	filler();
 	return (0);
 }

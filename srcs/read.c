@@ -12,7 +12,7 @@
 
 #include "../includes/filler.h"
 
-int	update_board(t_filler *filler, t_player *player, char **line)
+int	update_board(t_filler *filler, char **line)
 {
 	char	*l;
 	int		ret;
@@ -52,28 +52,35 @@ int	line_piece(t_player *player, t_filler *filler, char *line)
 
 int	line_board(t_player *player, t_filler *filler, char *line)
 {
-	update_board(filler, player, &line);
+	update_board(filler, &line);
 	update_map(filler, player);
 	return (1);
 }
 
-int	next_turn(int ret)
+int	next_turn(t_player *player, t_filler *filler, char **line, int ret)
 {
-	char		*line;
-	t_player	*player;
-	t_filler	*filler;
-
-	if ((ret = get_next_line(0, &line)) && ft_strstr(line, "Plateau "))
-		ret = get_next_line(0, &line);
-	if (ft_strstr(line, "  012") && ret > 0)
-		line_board(player, filler, line);
-	else if (ft_strstr(line, "Piece ") && init_piece(&line, player) && ret > 0)
+	if ((ret = get_next_line(0, line)) && ft_strstr(*line, "Plateau "))
+		ret = get_next_line(0, line);
+	if (ft_strstr(*line, "  012") && ret > 0)
+		line_board(player, filler, *line);
+	else if (ft_strstr(*line, "Piece ") && init_piece(line, player) && ret > 0)
 	{
 		if (place_piece(filler, player) == -1)
 			return (-1);
 		free_piece(player);
 	}
-	else if (ft_strstr(line, "exec") && ret > 0)
+	return (ret);
+}
+
+int	filler(void)
+{
+	int			ret;
+	char		*line;
+	t_player	*player;
+	t_filler	*filler;
+
+	ret = get_next_line(0, &line);
+	if (ft_strstr(line, "exec") && ret > 0)
 	{
 		player = init_player(line);
 		ret = get_next_line(0, &line);
@@ -81,17 +88,9 @@ int	next_turn(int ret)
 		ret = get_next_line(0, &line);
 		line_board(player, filler, line);
 		path_mid(filler);
-		print_map(filler);
 	}
-	return (ret);
-}
-
-int	filler(void)
-{
-	int ret;
-
 	ret = 1;
 	while (ret > 0)
-		ret = next_turn(ret);
+		ret = next_turn(player, filler, &line, ret);
 	return (0);
 }

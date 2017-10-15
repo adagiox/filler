@@ -64,7 +64,7 @@ int	check_valid(t_player *player, t_filler *filler, int x, int y)
 	return (1);
 }
 
-int	set_place(t_filler *filler, t_player *player, int x)
+int	set_place(t_player *player, int x)
 {
 	player->b_col = x;
 	player->score = 0;
@@ -77,7 +77,7 @@ int	check_place(t_filler *filler, t_player *player, int y, int x)
 	int i;
 	int j;
 
-	i = set_place(filler, player, x);
+	i = set_place(player, x);
 	while (i < player->p_rows)
 	{
 		x = player->b_col;

@@ -1,5 +1,0 @@
-srcs/read.c:71:37: error: invalid operands to binary expression ('char *' and 'void')
-        else if (ft_strstr(line, "Piece ") && init_piece(&line, player))
-                 ~~~~~~~~~~~~~~~~~~~~~~~~~ ^  ~~~~~~~~~~~~~~~~~~~~~~~~~
-1 error generated.
-make: *** [all] Error 1

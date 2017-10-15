@@ -45,13 +45,16 @@ typedef struct	s_player
 t_player		*init_player(char *line);
 t_filler		*init_filler(char *line);
 int				filler(void);
-int				update_board(t_filler *filler, t_player *player, char **line);
+int				next_turn(t_player *player, t_filler *filler, char **line,
+						int ret);
+int				update_board(t_filler *filler, char **line);
 int				line_piece(t_player *player, t_filler *filler, char *line);
 int				line_board(t_player *player, t_filler *filler, char *line);
 void			print_map(t_filler *filler);
 int				update_map(t_filler *filler, t_player *player);
 char			**init_map(t_filler *filler);
-t_filler		*set_filler(t_filler *filler, char *line);
+t_filler		*set_filler(char *line);
+int				set_place(t_player *player, int x);
 int				init_mid(t_filler *filler, int i, int j);
 void			path_mid(t_filler *filler);
 void			get_piece(char *line, t_player *player);

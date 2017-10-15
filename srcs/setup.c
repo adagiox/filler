@@ -35,8 +35,10 @@ char		**init_map(t_filler *filler)
 	return (map);
 }
 
-t_filler	*set_filler(t_filler *filler, char *line)
+t_filler	*set_filler(char *line)
 {
+	t_filler *filler;
+
 	filler = (t_filler *)malloc(sizeof(t_filler));
 	line += 8;
 	filler->height = ft_atoi(line);
@@ -54,7 +56,7 @@ t_filler	*init_filler(char *line)
 
 	i = 0;
 	j = 0;
-	filler = set_filler(filler, line);
+	filler = set_filler(line);
 	h = (char **)malloc(sizeof(char *) * filler->height);
 	while (i < filler->height)
 	{
