@@ -54,7 +54,6 @@ int	line_board(t_player *player, t_filler *filler, char *line)
 {
 	update_board(filler, player, &line);
 	update_map(filler, player);
-	print_map(filler);
 	return (1);
 }
 
@@ -82,6 +81,7 @@ int	next_turn(int ret)
 		ret = get_next_line(0, &line);
 		line_board(player, filler, line);
 		path_mid(filler);
+		print_map(filler);
 	}
 	return (ret);
 }

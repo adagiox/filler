@@ -1,4 +1,4 @@
-FILES = filler.c map.c setup.c piece.c place.c read.c print.c
+FILES = filler.c map.c setup.c piece.c place.c read.c print.c strategy.c
 
 SRC = $(addprefix srcs/, $(FILES))
 
@@ -12,7 +12,7 @@ debug:
 
 
 test: all
-	./filler_vm -p1 ./carli.filler -p2 ./a.out -f map01
+	./filler_vm -p1 ./carli.filler -p2 ./a.out -f map00
 
 test2: all
 	rm -rf testing.txt

@@ -122,5 +122,5 @@ void		path_mid(t_filler *filler)
 		}
 		i++;
 	}
-	checker(filler);
+	strategy(filler);
 }

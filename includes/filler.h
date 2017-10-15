@@ -44,7 +44,7 @@ typedef struct	s_player
 
 t_player		*init_player(char *line);
 t_filler		*init_filler(char *line);
-int				filler();
+int				filler(void);
 int				update_board(t_filler *filler, t_player *player, char **line);
 int				line_piece(t_player *player, t_filler *filler, char *line);
 int				line_board(t_player *player, t_filler *filler, char *line);
@@ -64,8 +64,10 @@ int				check_place(t_filler *filler, t_player *player, int y, int x);
 void			set_piece_col(t_player *player);
 void			set_piece_row(t_player *player);
 void			print_piece(t_player *player);
-void			start_bot(t_filler *filler);
-void			start_top(t_filler *filler);
-void			checker(t_filler *filler);
+void			start_bot_right(t_filler *filler);
+void			start_bot_left(t_filler *filler);
+void			start_top_right(t_filler *filler);
+void			start_top_left(t_filler *filler);
+void			strategy(t_filler *filler);
 
 #endif
