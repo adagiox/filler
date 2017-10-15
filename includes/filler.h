@@ -5,14 +5,16 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: erintala <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/10/15 10:40:07 by erintala          #+#    #+#             */
-/*   Updated: 2017/10/15 10:40:12 by erintala         ###   ########.fr       */
+/*   Created: 2017/10/15 11:06:17 by erintala          #+#    #+#             */
+/*   Updated: 2017/10/15 11:06:23 by erintala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include "../libft/includes/libft.h"
+#ifndef FILLER_H
+# define FILLER_H
+# include <stdio.h>
+# include <stdlib.h>
+# include "../libft/includes/libft.h"
 
 typedef struct	s_filler
 {
@@ -40,28 +42,30 @@ typedef struct	s_player
 	int		max;
 }				t_player;
 
-t_player	*init_player(char *line);
-t_filler	*init_filler(char *line);
-int			filler();
-int			update_board(t_filler *filler, t_player *player, char **line);
-int			line_piece(t_player *player, t_filler *filler, char *line);
-int			line_board(t_player *player, t_filler *filler, char *line);
-void 		print_map(t_filler *filler);
-int			update_map(t_filler *filler, t_player *player);
-char		**init_map(t_filler *filler);
-t_filler	*set_filler(t_filler *filler, char *line);
-int			init_mid(t_filler *filler, int i, int j);
-void		path_mid(t_filler *filler);
-void		get_piece(char *line, t_player *player);
-int			init_piece(char **line, t_player *player);
-int			free_piece(t_player *player);
-int			print_place(int y, int x, t_player *player);
-int			place_piece(t_filler *filler, t_player *player);
-int			check_valid(t_player *player, t_filler *filler, int x, int y);
-int			check_place(t_filler *filler, t_player *player, int y, int x);
-void		set_piece_col(t_player *player);
-void		set_piece_row(t_player *player);
-void		print_piece(t_player *player);
-void		start_bot(t_filler *filler);
-void		start_top(t_filler *filler);
-void		checker(t_filler *filler);
+t_player		*init_player(char *line);
+t_filler		*init_filler(char *line);
+int				filler();
+int				update_board(t_filler *filler, t_player *player, char **line);
+int				line_piece(t_player *player, t_filler *filler, char *line);
+int				line_board(t_player *player, t_filler *filler, char *line);
+void			print_map(t_filler *filler);
+int				update_map(t_filler *filler, t_player *player);
+char			**init_map(t_filler *filler);
+t_filler		*set_filler(t_filler *filler, char *line);
+int				init_mid(t_filler *filler, int i, int j);
+void			path_mid(t_filler *filler);
+void			get_piece(char *line, t_player *player);
+int				init_piece(char **line, t_player *player);
+int				free_piece(t_player *player);
+int				print_place(int y, int x, t_player *player);
+int				place_piece(t_filler *filler, t_player *player);
+int				check_valid(t_player *player, t_filler *filler, int x, int y);
+int				check_place(t_filler *filler, t_player *player, int y, int x);
+void			set_piece_col(t_player *player);
+void			set_piece_row(t_player *player);
+void			print_piece(t_player *player);
+void			start_bot(t_filler *filler);
+void			start_top(t_filler *filler);
+void			checker(t_filler *filler);
+
+#endif
