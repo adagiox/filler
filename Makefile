@@ -12,9 +12,6 @@ $(NAME):
 	make -C ./libft
 	gcc $(FLAGS) $(SRC) -L./libft -lft -o $(NAME)
 
-test: re
-	./filler_vm -p1 ./carli.filler -p2 ./$(NAME) -f map00
-
 clean:
 
 fclean:
