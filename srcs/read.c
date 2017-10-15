@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   read.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: erintala <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/10/15 10:39:38 by erintala          #+#    #+#             */
+/*   Updated: 2017/10/15 10:39:39 by erintala         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/filler.h"
 
-int update_board(t_filler *filler, t_player *player, char **line)
+int	update_board(t_filler *filler, t_player *player, char **line)
 {
-	char *l;
-	int ret;
-	int i;
-	int j;
+	char	*l;
+	int		ret;
+	int		i;
+	int		j;
 
 	ret = 0;
 	i = 0;
@@ -25,18 +37,7 @@ int update_board(t_filler *filler, t_player *player, char **line)
 	return (ret);
 }
 
-int line_player(t_player *player, t_filler *filler, char *line)
-{
-	player = init_player(line);
-	get_next_line(0, &line);
-	filler = init_filler(line);
-	get_next_line(0, &line);
-	line_board(player, filler, line);
-	path_mid(filler);
-	return (1);
-}
-
-int line_piece(t_player *player, t_filler *filler, char *line)
+int	line_piece(t_player *player, t_filler *filler, char *line)
 {
 	init_piece(&line, player);
 	if (place_piece(filler, player) == -1)
@@ -49,7 +50,7 @@ int line_piece(t_player *player, t_filler *filler, char *line)
 	return (1);
 }
 
-int line_board(t_player *player, t_filler *filler, char *line)
+int	line_board(t_player *player, t_filler *filler, char *line)
 {
 	update_board(filler, player, &line);
 	update_map(filler, player);
@@ -57,11 +58,11 @@ int line_board(t_player *player, t_filler *filler, char *line)
 	return (1);
 }
 
-int next_turn(int ret)
+int	next_turn(int ret)
 {
-	char *line;
-	t_player *player;
-	t_filler *filler;
+	char		*line;
+	t_player	*player;
+	t_filler	*filler;
 
 	if ((ret = get_next_line(0, &line)) && ft_strstr(line, "Plateau "))
 		ret = get_next_line(0, &line);
@@ -85,12 +86,12 @@ int next_turn(int ret)
 	return (ret);
 }
 
-int filler()
+int	filler(void)
 {
 	int ret;
 
 	ret = 1;
 	while (ret > 0)
-		ret = next_turn(ret);	
+		ret = next_turn(ret);
 	return (0);
 }

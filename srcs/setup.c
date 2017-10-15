@@ -1,17 +1,34 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   setup.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: erintala <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/10/15 10:39:49 by erintala          #+#    #+#             */
+/*   Updated: 2017/10/15 10:39:51 by erintala         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/filler.h"
 
-char **init_map(t_filler *filler)
+char		**init_map(t_filler *filler)
 {
-	char **map;
-	int i;
+	char	**map;
+	int		i;
+	int		j;
 
 	i = 0;
 	map = (char **)malloc(sizeof(char *) * filler->height);
 	while (i < filler->height)
 	{
+		j = 0;
 		map[i] = ft_strnew(filler->width + 1);
-		for (int j = 0; j < filler->width; j++)
+		while (j < filler->width)
+		{
 			map[i][j] = '1';
+			j++;
+		}
 		map[i][filler->width] = '\0';
 		i++;
 	}
@@ -28,12 +45,12 @@ t_filler	*set_filler(t_filler *filler, char *line)
 	return (filler);
 }
 
-t_filler *init_filler(char *line)
+t_filler	*init_filler(char *line)
 {
-	t_filler *filler;
-	char **h;
-	int i;
-	int j;
+	t_filler	*filler;
+	char		**h;
+	int			i;
+	int			j;
 
 	i = 0;
 	j = 0;
@@ -53,13 +70,13 @@ t_filler *init_filler(char *line)
 	filler->board = h;
 	filler->map = init_map(filler);
 	init_mid(filler, i, j);
-	return(filler);
+	return (filler);
 }
 
-t_player *init_player(char *line)
+t_player	*init_player(char *line)
 {
-	t_player *player;
-	char *p;
+	t_player	*player;
+	char		*p;
 
 	player = ft_memalloc(sizeof(t_player));
 	player->num_char = 0;
@@ -77,10 +94,10 @@ t_player *init_player(char *line)
 		player->player_char = 'X';
 		player->opp_char = 'O';
 	}
-	return(player);
+	return (player);
 }
 
-void path_mid(t_filler *filler)
+void		path_mid(t_filler *filler)
 {
 	int y;
 	int x;

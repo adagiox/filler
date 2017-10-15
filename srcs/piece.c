@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   piece.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: erintala <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/10/15 10:39:04 by erintala          #+#    #+#             */
+/*   Updated: 2017/10/15 10:39:07 by erintala         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/filler.h"
 
-int free_piece(t_player *player)
+int		free_piece(t_player *player)
 {
 	int i;
-	
+
 	i = 0;
 	while (i < player->p_rows)
 	{
@@ -14,7 +26,7 @@ int free_piece(t_player *player)
 	return (1);
 }
 
-int	init_piece(char **line, t_player *player)
+int		init_piece(char **line, t_player *player)
 {
 	int	row;
 	int	i;
@@ -43,9 +55,9 @@ void	get_piece(char *line, t_player *player)
 {
 	int	row;
 	int	i;
-	
+
 	row = 0;
-	while(row < player->p_rows)
+	while (row < player->p_rows)
 	{
 		i = 0;
 		ft_strdel(&line);

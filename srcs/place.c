@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   place.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: erintala <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/10/15 10:39:14 by erintala          #+#    #+#             */
+/*   Updated: 2017/10/15 10:39:16 by erintala         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/filler.h"
 
-int print_place(int y, int x, int max, t_player *player)
+int	print_place(int y, int x, t_player *player)
 {
-	if (max > 0)
+	if (player->max > 0)
 	{
 		ft_printf("%i %i\n", y - player->row_offset, x - player->col_offset);
 		return (1);
@@ -12,16 +24,15 @@ int print_place(int y, int x, int max, t_player *player)
 	return (-1);
 }
 
-int place_piece(t_filler *filler, t_player *player)
+int	place_piece(t_filler *filler, t_player *player)
 {
-	int max;
-	int score;
 	int x;
 	int y;
 	int i;
 	int j;
 
-	max = 0;
+	player->max = 0;
+	player->score = 0;
 	x = 0;
 	y = 0;
 	i = -1;
@@ -29,18 +40,19 @@ int place_piece(t_filler *filler, t_player *player)
 	{
 		while (++j < filler->width)
 		{
-			if ((score = check_place(filler, player, i, j)) >= max)
+			if ((player->score = check_place(filler, player, i, j))
+				>= player->max)
 			{
 				x = j;
 				y = i;
-				max = score;
+				player->max = player->score;
 			}
 		}
 	}
-	return (print_place(y, x, max, player));
+	return (print_place(y, x, player));
 }
 
-int check_valid(t_player *player, t_filler *filler, int x, int y)
+int	check_valid(t_player *player, t_filler *filler, int x, int y)
 {
 	if (x >= filler->width || y >= filler->height)
 		return (-1);
@@ -52,7 +64,7 @@ int check_valid(t_player *player, t_filler *filler, int x, int y)
 	return (1);
 }
 
-int set_place(t_filler *filler, t_player *player, int x)
+int	set_place(t_filler *filler, t_player *player, int x)
 {
 	player->b_col = x;
 	player->score = 0;
@@ -60,7 +72,7 @@ int set_place(t_filler *filler, t_player *player, int x)
 	return (player->row_offset);
 }
 
-int check_place(t_filler *filler, t_player *player, int y, int x)
+int	check_place(t_filler *filler, t_player *player, int y, int x)
 {
 	int i;
 	int j;
@@ -71,7 +83,7 @@ int check_place(t_filler *filler, t_player *player, int y, int x)
 		x = player->b_col;
 		j = player->col_offset;
 		while (j < player->p_cols)
-		{		
+		{
 			if (player->piece[i][j] == '*')
 			{
 				if (check_valid(player, filler, x, y) == -1)

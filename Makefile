@@ -1,4 +1,4 @@
-FILES = filler.c map.c setup.c piece.c place.c read.c
+FILES = filler.c map.c setup.c piece.c place.c read.c print.c
 
 SRC = $(addprefix srcs/, $(FILES))
 

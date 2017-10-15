@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   map.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: erintala <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/10/15 10:38:55 by erintala          #+#    #+#             */
+/*   Updated: 2017/10/15 10:38:57 by erintala         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/filler.h"
 
-int update_map(t_filler *filler, t_player *player)
+int		update_map(t_filler *filler, t_player *player)
 {
 	int i;
 	int j;
@@ -25,7 +37,7 @@ int update_map(t_filler *filler, t_player *player)
 	return (1);
 }
 
-int init_mid(t_filler *filler, int i, int j)
+int		init_mid(t_filler *filler, int i, int j)
 {
 	int y;
 	int x;
@@ -40,8 +52,8 @@ int init_mid(t_filler *filler, int i, int j)
 			j = x;
 			while (j < filler->width - x)
 			{
-				 filler->map[i][j] = filler->map[i][j] + 1;
-				 j++;
+				filler->map[i][j] = filler->map[i][j] + 1;
+				j++;
 			}
 			i++;
 		}
@@ -72,7 +84,7 @@ void	start_bot(t_filler *filler)
 		col = 0;
 		while (col < filler->width)
 		{
-			if (row == filler->start_row || row == 2 || col == 0 || 
+			if (row == filler->start_row || row == 2 || col == 0 ||
 				col == filler->width - 2 || col == filler->width / 2)
 			{
 				if (filler->map[row][col] != '#')
@@ -95,8 +107,9 @@ void	start_top(t_filler *filler)
 		col = 0;
 		while (col < filler->width)
 		{
-			if (row == filler->start_row || row == filler->height - 2 || col == 0 || 
-				col == filler->width - 2 || col == filler->width / 2)
+			if (row == filler->start_row || row == filler->height - 2 ||
+				col == 0 || col == filler->width - 2 ||
+				col == filler->width / 2)
 			{
 				if (filler->map[row][col] != '#')
 					filler->map[row][col] = '~';
